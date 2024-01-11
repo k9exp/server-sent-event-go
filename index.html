@@ -1,0 +1,29 @@
+<html>
+
+    <head>
+        <title>Server Sent Event</title>
+    </head>
+
+    <body>
+
+        <ul id="list">
+            <li>All Event Names</li>
+        </ul>
+
+        <script>
+            const list = document.getElementById("list")
+
+            const events = new EventSource("/sse")
+
+            events.onmessage = (e) => {
+                const li = document.createElement("li")
+                li.innerHTML = e.data
+                list.appendChild(li)
+                li.scrollIntoView()
+            }
+
+        </script>
+    </body>
+
+</html>
+
