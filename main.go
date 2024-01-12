@@ -1,10 +1,11 @@
 package main
 
 import (
-    "fmt"
-    "strconv"
+	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+	"sync/atomic"
 	"time"
 )
 
@@ -36,12 +37,16 @@ func main(){
 
         flusher := w.(http.Flusher) // type casting
     
-        i := 0
+        var i int32 = 0
         for {
-            fmt.Fprintf(w, getSSEData("message", strconv.Itoa(i), uint64(i), 10000))
-            i += 1
+            fmt.Fprintf(w, getSSEData("message", strconv.Itoa(int(i)), uint64(i), 10000))
+
+            // increment
+            // but bad for concurrent threads
+            atomic.AddInt32(&i, 1)
+
             flusher.Flush()
-            time.Sleep(1000 * time.Millisecond)
+            time.Sleep(30 * time.Millisecond)
         }
     })
 
