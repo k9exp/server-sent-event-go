@@ -41,8 +41,8 @@ func main(){
         for {
             fmt.Fprintf(w, getSSEData("message", strconv.Itoa(int(i)), uint64(i), 10000))
 
-            // increment
-            // but bad for concurrent threads
+	    // i++
+	    // but thread safe
             atomic.AddInt32(&i, 1)
 
             flusher.Flush()
